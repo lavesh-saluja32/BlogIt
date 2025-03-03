@@ -1,16 +1,26 @@
 import React, { useEffect, useState } from "react";
 
-import { Typography } from "@bigbinary/neetoui";
+import { Button, Typography } from "@bigbinary/neetoui";
+import { useHistory } from "react-router-dom";
 
 import postsApi from "apis/posts";
 
 import PageLoader from "../commons/PageLoader";
 import PostCard from "../PostCard";
-import Sidebar from "../Sidebar";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const history = useHistory();
+
+  const navigateShowPost = slug => {
+    history.push(`/post/${slug}/show`);
+  };
+
+  const navigateToCreatePost = () => {
+    history.push("/post/create");
+  };
 
   const fetchPosts = async () => {
     try {
@@ -38,17 +48,28 @@ const Home = () => {
   }
 
   return (
-    <div className="flex justify-between">
-      <Sidebar />
-      <div className="w-[90vw] overflow-y-scroll p-10 pt-20">
+    <>
+      <div className="flex w-full justify-between p-10">
         <Typography style="h1" weight="extrabold">
           Blog posts
-          {posts.map(post => (
-            <PostCard key={post.title} {...post} />
-          ))}
         </Typography>
+        <Button
+          className="hover:none bg-black text-white"
+          label="Add new blog post"
+          style="primary"
+          onClick={navigateToCreatePost}
+        />
       </div>
-    </div>
+      <div className="pt-15 h-5/6 w-full overflow-y-scroll p-10">
+        {posts.map(post => (
+          <PostCard
+            key={post.title}
+            {...post}
+            showPost={() => navigateShowPost(post.slug)}
+          />
+        ))}
+      </div>
+    </>
   );
 };
 

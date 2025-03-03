@@ -10,4 +10,16 @@ class Api::V1::PostsController < ApplicationController
     post = Post.find_by(slug: params[:slug])
     render status: :ok, json: { post: }
   end
+
+  def create
+    post = Post.new(task_params)
+    post.save!
+    render_notice(t("successfully_created"))
+  end
+
+  private
+
+    def task_params
+      params.require(:post).permit(:title, :description)
+    end
 end

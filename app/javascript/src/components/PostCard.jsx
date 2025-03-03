@@ -2,8 +2,11 @@ import React from "react";
 
 import { Typography } from "@bigbinary/neetoui";
 
-const PostCard = ({ title, created_at, description }) => (
-  <div className="m-5 rounded-md border-b border-t-gray-300 bg-white p-4 pb-2">
+const PostCard = ({ title, created_at, description, showPost }) => (
+  <div
+    className="m-5 cursor-pointer rounded-md border-b border-t-gray-300 bg-white p-4 pb-2"
+    onClick={showPost}
+  >
     <Typography className="mb-2" style="h2">
       {title}
     </Typography>
@@ -19,4 +22,5 @@ const PostCard = ({ title, created_at, description }) => (
     </Typography>
   </div>
 );
+
 export default PostCard;

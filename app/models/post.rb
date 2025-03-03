@@ -49,4 +49,10 @@ class Post < ApplicationRecord
       slug_candidate = slug_count.positive? ? "#{title_slug}-#{slug_count + 1}" : title_slug
       self.slug = slug_candidate
     end
+
+    def slug_not_changed
+      if will_save_change_to_slug? && self.persisted?
+        errors.add(:slug, I18n.t("task.slug.immutable"))
+      end
+    end
 end
