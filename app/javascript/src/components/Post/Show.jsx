@@ -39,7 +39,7 @@ const Show = () => {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="w-[90vw] space-y-4">
       <div className=" flex space-x-2 p-1">
         {categories.map(category => (
           <Typography

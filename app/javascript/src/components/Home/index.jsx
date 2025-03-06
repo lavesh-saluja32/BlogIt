@@ -57,7 +57,7 @@ const Home = () => {
 
   return (
     <>
-      <div className="flex w-full justify-between p-10">
+      <div className="flex w-[90vw] justify-between p-10">
         <Typography style="h1" weight="extrabold">
           Blog posts
         </Typography>

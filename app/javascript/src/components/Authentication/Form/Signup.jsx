@@ -5,7 +5,7 @@ import { Form, Input, Select } from "@bigbinary/neetoui/formik";
 import { Link } from "react-router-dom";
 
 const Signup = ({ handleSubmit, loading, organizations = [] }) => (
-  <div className="flex h-full items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-8">
+  <div className="flex h-screen w-screen items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-8">
     <div className="w-full max-w-md">
       <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-700">
         Sign Up

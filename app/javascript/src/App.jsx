@@ -9,9 +9,9 @@ import { getFromLocalStorage } from "utils/storage";
 
 import PrivateRoute from "./components/commons/PrivateRoute";
 import Home from "./components/Home";
-import Layout from "./components/Layout";
 import Create from "./components/Post/Create";
 import Show from "./components/Post/Show";
+import Sidebar from "./components/Sidebar";
 
 const App = () => {
   const authToken = getFromLocalStorage("authToken");
@@ -19,22 +19,28 @@ const App = () => {
 
   return (
     <Router>
-      <Layout>
-        <ToastContainer />
-        <Switch>
-          <Route exact component={Signup} path="/signup" />
-          <Route exact component={Login} path="/login" />
-          <Route exact component={Show} path="/post/:slug/show" />
-          <Route exact component={Create} path="/post/create" />
-          <Route exact path="/about" render={() => <div>About Page</div>} />
-          <PrivateRoute
-            component={Home}
-            condition={isLoggedIn}
-            path="/"
-            redirectRoute="/login"
-          />
-        </Switch>
-      </Layout>
+      <ToastContainer />
+      <div className="flex">
+        {isLoggedIn && <Sidebar />}
+        <div
+          className={`h-screen ${!isLoggedIn} ? "w-[100vw]" : "w-[90vw]"
+         p-10 pb-10 pt-20`}
+        >
+          <Switch>
+            <Route exact component={Signup} path="/signup" />
+            <Route exact component={Login} path="/login" />
+            <Route exact component={Show} path="/post/:slug/show" />
+            <Route exact component={Create} path="/post/create" />
+            <Route exact path="/about" render={() => <div>About Page</div>} />
+            <PrivateRoute
+              component={Home}
+              condition={isLoggedIn}
+              path="/"
+              redirectRoute="/login"
+            />
+          </Switch>
+        </div>
+      </div>
     </Router>
   );
 };

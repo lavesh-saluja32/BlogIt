@@ -48,7 +48,7 @@ const Create = () => {
   }, []);
 
   return (
-    <div className="pt-15 w-full overflow-y-scroll p-10">
+    <div className="pt-15 w-[90vw] overflow-y-scroll p-10">
       <Typography style="h1" weight="extrabold">
         New Blog Post
       </Typography>

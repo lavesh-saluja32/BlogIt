@@ -5,7 +5,7 @@ import { Form, Input } from "@bigbinary/neetoui/formik";
 import { Link } from "react-router-dom";
 
 const Login = ({ handleSubmit, loading }) => (
-  <div className="flex h-full items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-8">
+  <div className="flex h-screen w-screen items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-8">
     <div className="w-full max-w-md">
       <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-700">
         Login
@@ -13,8 +13,8 @@ const Login = ({ handleSubmit, loading }) => (
       <div className="text-center">
         <Link
           to="/signup"
-          className="text-bb-purple mt-2 text-sm font-medium transition duration-150 ease-in-out
-            focus:underline focus:outline-none"
+          className="mt-2 text-sm font-medium text-blue-300 transition duration-150 ease-in-out
+            ease-in-out focus:underline focus:outline-none "
         >
           Or Sign Up Now
         </Link>

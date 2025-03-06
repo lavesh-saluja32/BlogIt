@@ -6,8 +6,10 @@ import { useHistory, useLocation } from "react-router-dom";
 
 import CategorySidebar from "./Home/Category";
 
+import authApi from "../apis/auth";
+import { resetAuthTokens } from "../apis/axios";
 import categoriesApi from "../apis/categories";
-import { getFromLocalStorage } from "../utils/storage";
+import { getFromLocalStorage, setToLocalStorage } from "../utils/storage";
 
 const Sidebar = () => {
   const [categories, setCategories] = useState([]);
@@ -34,6 +36,22 @@ const Sidebar = () => {
       params.delete("category_names");
     }
     history.push({ search: params.toString() });
+  };
+
+  const handleLogout = async () => {
+    try {
+      await authApi.logout();
+      setToLocalStorage({
+        authToken: null,
+        email: null,
+        userId: null,
+        userName: null,
+      });
+      resetAuthTokens();
+      window.location.href = "/";
+    } catch (error) {
+      logger.error(error);
+    }
   };
 
   useEffect(() => {
@@ -102,7 +120,10 @@ const Sidebar = () => {
                 <p className="text-gray-500">{userEmail}</p>
               </div>
             </div>
-            <button className="mt-2 flex w-full items-center justify-center rounded p-1 text-red-600 hover:bg-gray-100">
+            <button
+              className="mt-2 flex w-full items-center justify-center rounded p-1 text-red-600 hover:bg-gray-100"
+              onClick={handleLogout}
+            >
               <LeftArrow className="mr-1" size={16} />
               Logout
             </button>

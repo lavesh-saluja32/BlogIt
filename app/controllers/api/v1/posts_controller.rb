@@ -2,13 +2,23 @@
 
 class Api::V1::PostsController < ApplicationController
   def index
+    current_user = @current_user
+    current_user_organization = current_user.organization
+    posts = current_user_organization.posts
+
+    puts "All posts in current user's organization:"
+    posts.each do |post|
+      puts "#{post.id}: #{post.title} - #{post.description}"
+    end
     if params[:category_names].present?
       category_names = params[:category_names].split(",")
       @posts = Post.includes(:categories)
+        .where(organization_id: current_user_organization.id)
         .where(categories: { name: category_names })
         .distinct
     else
-      @posts = Post.includes(:categories).all
+      @posts = Post.includes(:categories)
+        .where(organization_id: current_user_organization.id)
     end
     render
   end
@@ -19,12 +29,12 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def create
-    default_user = User.first
-    default_organization = Organization.first
+    user = @current_user
+    organization = user.organization
 
     post = Post.new(post_params)
-    post.user = default_user
-    post.organization = default_organization
+    post.user = user
+    post.organization = organization
 
     if params[:category_ids].present?
       categories = Category.where(id: params[:category_ids])
