@@ -121,7 +121,7 @@ class UserTest < ActiveSupport::TestCase
     @user.save!
     second_user = User.create!(
       name: "Olive Sans", email: "olive@example.com",
-      password: "welcome", password_confirmation: "welcome")
+      password: "Welcome@123", password_confirmation: "Welcome@123", organization: @organization)
 
     assert_not_same @user.authentication_token, second_user.authentication_token
   end
