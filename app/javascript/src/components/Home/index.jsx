@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { Button, Typography } from "@bigbinary/neetoui";
-import { useHistory } from "react-router-dom";
+import { useLocation, useHistory } from "react-router-dom";
 
 import postsApi from "apis/posts";
 
@@ -13,6 +13,7 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
 
   const history = useHistory();
+  const location = useLocation();
 
   const navigateShowPost = slug => {
     history.push(`/post/${slug}/show`);
@@ -22,14 +23,21 @@ const Home = () => {
     history.push("/post/create");
   };
 
+  // Extract categories from URL query params
+  const getQueryParams = () => {
+    const params = new URLSearchParams(location.search);
+
+    return params.get("category_names")?.split(",") || [];
+  };
+
   const fetchPosts = async () => {
+    setLoading(true);
     try {
-      const {
-        data: { posts },
-      } = await postsApi.fetch();
-      setPosts(posts);
+      const categoryNames = getQueryParams();
+      const response = await postsApi.fetch({ category_names: categoryNames });
+      setPosts(response.data.posts);
     } catch (error) {
-      logger.error(error);
+      logger.error("Error fetching posts:", error);
     } finally {
       setLoading(false);
     }
@@ -37,7 +45,7 @@ const Home = () => {
 
   useEffect(() => {
     fetchPosts();
-  }, []);
+  }, [location.search]); // Refetch posts when query params change
 
   if (loading) {
     return (
@@ -61,35 +69,22 @@ const Home = () => {
         />
       </div>
       <div className="pt-15 h-5/6 w-full overflow-y-scroll p-10">
-        {posts.map(post => (
-          <PostCard
-            key={post.title}
-            {...post}
-            showPost={() => navigateShowPost(post.slug)}
-          />
-        ))}
+        {posts.length > 0 ? (
+          posts.map(post => (
+            <PostCard
+              key={post.title}
+              {...post}
+              showPost={() => navigateShowPost(post.slug)}
+            />
+          ))
+        ) : (
+          <Typography className="text-center text-gray-500" style="h3">
+            No posts available
+          </Typography>
+        )}
       </div>
     </>
   );
 };
 
 export default Home;
-export const samplePosts = [
-  {
-    title: "Understanding React Hooks",
-    date: "January 10, 2025",
-    excerpt:
-      "An introduction to React Hooks and how they improve functional components.",
-  },
-  {
-    title: "JavaScript ES6 Features",
-    date: "February 5, 2025",
-    excerpt:
-      "Exploring the modern features of JavaScript introduced in ES6 and beyond.",
-  },
-  {
-    title: "CSS Grid vs Flexbox",
-    date: "March 15, 2025",
-    excerpt: "A comparison of CSS Grid and Flexbox for responsive web design.",
-  },
-];

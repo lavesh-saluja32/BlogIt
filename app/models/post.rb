@@ -4,24 +4,37 @@
 #
 # Table name: posts
 #
-#  id           :integer          not null, primary key
-#  description  :text             not null
-#  downvotes    :integer          default(0), not null
-#  is_bloggable :boolean          default(FALSE)
-#  slug         :string           not null
-#  title        :string           not null
-#  upvotes      :integer          default(0), not null
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
+#  id              :integer          not null, primary key
+#  description     :text             not null
+#  downvotes       :integer          default(0), not null
+#  is_bloggable    :boolean          default(FALSE)
+#  slug            :string           not null
+#  title           :string           not null
+#  upvotes         :integer          default(0), not null
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  organization_id :integer          not null
+#  user_id         :integer          not null
 #
 # Indexes
 #
-#  index_posts_on_slug  (slug) UNIQUE
+#  index_posts_on_organization_id  (organization_id)
+#  index_posts_on_slug             (slug) UNIQUE
+#  index_posts_on_user_id          (user_id)
+#
+# Foreign Keys
+#
+#  organization_id  (organization_id => organizations.id)
+#  user_id          (user_id => users.id)
 #
 class Post < ApplicationRecord
   MAX_TITLE_LENGTH = 125
   MAX_DESCRIPTION_LENGTH = 10000
   VALID_TITLE_REGEX = /\A.*[a-zA-Z0-9].*\z/i
+  has_and_belongs_to_many :categories
+  belongs_to :user
+  belongs_to :organization
+
   validates :title, presence: true, length: { maximum: MAX_TITLE_LENGTH }, format: { with: VALID_TITLE_REGEX }
   validates :description, presence: true, length: { maximum: MAX_DESCRIPTION_LENGTH },
     format: { with: VALID_TITLE_REGEX }
@@ -34,6 +47,7 @@ class Post < ApplicationRecord
   private
 
     def set_slug
+      puts "hello 1"
       title_slug = title.parameterize
       regex_pattern = "slug #{Constants::DB_REGEX_OPERATOR} ?"
       latest_post_slug = Post.where(
@@ -48,6 +62,7 @@ class Post < ApplicationRecord
       end
       slug_candidate = slug_count.positive? ? "#{title_slug}-#{slug_count + 1}" : title_slug
       self.slug = slug_candidate
+      puts slug_candidate
     end
 
     def slug_not_changed

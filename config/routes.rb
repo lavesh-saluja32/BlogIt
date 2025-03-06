@@ -11,7 +11,13 @@ Rails.application.routes.draw do
   # root "posts#index"
   namespace :api do
     namespace :v1 do
-      resources :posts, only: %i[index show create], param: :slug
+      constraints(lambda { |req| req.format == :json }) do
+        resources :posts, only: %i[index show create], param: :slug
+        resources :categories, only: %i[index create]
+        resources :users, only: %i[create]
+        resources :organizations, only: %i[index]
+        resource :session, only: [:create, :destroy]
+      end
     end
   end
   root "home#index"
