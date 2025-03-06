@@ -73,3 +73,11 @@ gem "react-rails", "~> 2.7.1"
 gem "shakapacker", "~> 6.6.0"
 
 gem "simplecov", require: false, group: :test
+
+group :development, :test do
+  # Rails integration for factory_bot, a replacement for fixtures
+  gem "factory_bot_rails"
+
+  # For auto-generating demo data
+  gem "faker"
+end

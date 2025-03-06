@@ -9,5 +9,5 @@
   "files.trimFinalNewlines": true,
   "editor.formatOnSave": true,
   "yaml.format.enable": true,
-  "cSpell.words": ["shakapacker"]
+  "cSpell.words": ["bloggable", "downvotes", "shakapacker", "upvotes"]
 }
