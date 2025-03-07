@@ -4,12 +4,7 @@ class Api::V1::PostsController < ApplicationController
   def index
     current_user = @current_user
     current_user_organization = current_user.organization
-    posts = current_user_organization.posts
 
-    puts "All posts in current user's organization:"
-    posts.each do |post|
-      puts "#{post.id}: #{post.title} - #{post.description}"
-    end
     if params[:category_names].present?
       category_names = params[:category_names].split(",")
       @posts = Post.includes(:categories)
@@ -25,7 +20,14 @@ class Api::V1::PostsController < ApplicationController
 
   def show
     post = Post.find_by(slug: params[:slug])
-    render status: :ok, json: { post:, categories: post.categories, user: post.user }
+    if post.nil?
+      puts "hello"
+      render status: :not_found, json: { error: "Post not found." }
+    elsif post.organization_id != current_user.organization_id
+      render status: :forbidden, json: { error: "You are not authorized to view this post." }
+    else
+      render status: :ok, json: { post:, categories: post.categories, user: post.user }
+    end
   end
 
   def create

@@ -47,7 +47,6 @@ class Post < ApplicationRecord
   private
 
     def set_slug
-      puts "hello 1"
       title_slug = title.parameterize
       regex_pattern = "slug #{Constants::DB_REGEX_OPERATOR} ?"
       latest_post_slug = Post.where(
@@ -62,7 +61,6 @@ class Post < ApplicationRecord
       end
       slug_candidate = slug_count.positive? ? "#{title_slug}-#{slug_count + 1}" : title_slug
       self.slug = slug_candidate
-      puts slug_candidate
     end
 
     def slug_not_changed
