@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 
-import { Typography } from "@bigbinary/neetoui";
+import { Edit } from "@bigbinary/neeto-icons";
+import { Button, Typography } from "@bigbinary/neetoui";
 import { useParams, useHistory } from "react-router-dom";
 
 import postsApi from "../../apis/posts";
@@ -30,6 +31,10 @@ const Show = () => {
     }
   };
 
+  const handleEditNavigate = () => {
+    history.push(`/post/${slug}/edit`);
+  };
+
   useEffect(() => {
     fetchPostDetails();
   }, []);
@@ -57,20 +62,37 @@ const Show = () => {
           className="h-12 w-12 rounded-full bg-yellow-300"
           src="#"
         />
-        <div className="flex flex-col">
-          <Typography className="text-sm" style="nano" weight="semibold">
-            {user.name}
-          </Typography>
+        <div className="flex w-full flex-col">
+          <div className="flex w-full justify-between p-4">
+            <Typography className="text-sm" style="nano" weight="semibold">
+              {user.name}
+            </Typography>
+            <Button
+              icon={() => <Edit />}
+              style="link"
+              onClick={handleEditNavigate}
+            />
+          </div>
           <Typography
             className="text-sm text-gray-600"
             style="body3"
             weight="light"
           >
-            {new Date(post.created_at.split(" ")[0]).toDateString()}
+            {new Date(post.updated_at.split(" ")[0]).toDateString()}
           </Typography>
         </div>
       </div>
-      <Typography style="h1">{post?.title}</Typography>
+      <div className="flex items-center justify-start space-x-3">
+        <Typography style="h1">{post?.title}</Typography>
+        {post?.publish === "unpublished" && (
+          <Typography
+            className="rounded-xl p-1 text-sm text-red-500 outline outline-red-500"
+            style="nano"
+          >
+            Draft
+          </Typography>
+        )}
+      </div>
       <Typography style="body1">{post?.description}</Typography>
     </div>
   );

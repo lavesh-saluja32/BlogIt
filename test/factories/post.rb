@@ -10,5 +10,6 @@ FactoryBot.define do
     slug { Faker::Internet.slug }
     user
     organization { user.organization }
+    publish { "unpublished" }
   end
 end

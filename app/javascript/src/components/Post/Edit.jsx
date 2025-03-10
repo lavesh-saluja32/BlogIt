@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 
-import { Typography, Select } from "@bigbinary/neetoui";
+import { Typography, Button, Select } from "@bigbinary/neetoui";
 import { Form, Input, Textarea } from "@bigbinary/neetoui/formik";
-import { useHistory } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 
 import PublishButton from "./PublishButton";
 
@@ -10,24 +10,27 @@ import categoriesApi from "../../apis/categories";
 import postsApi from "../../apis/posts";
 import PageLoader from "../commons/PageLoader";
 
-const Create = () => {
+const Edit = () => {
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState([]);
+  const [postDetail, setPostDetail] = useState({});
+  const [categoryDetails, setCategoryDetails] = useState([]);
 
   const history = useHistory();
+  const { slug } = useParams();
+
   const handleSubmit = async (values, publishStatus) => {
-    logger.log(values, publishStatus);
     setLoading(true);
     try {
       const payload = {
         title: values.title,
         description: values.description,
-        category_ids: values.category_ids,
+        category_ids: values.category_ids.map(category => category.value),
         publish: publishStatus,
       };
-      await postsApi.create(payload);
+      await postsApi.update({ slug, payload });
       setLoading(false);
-      history.push("/");
+      history.push(`/post/${slug}/show`);
     } catch (error) {
       logger.error(error);
       setLoading(false);
@@ -37,42 +40,64 @@ const Create = () => {
   const fetchCategories = async () => {
     try {
       const response = await categoriesApi.fetch();
-      setCategories(
-        response.data.categories.map(category => ({
+      const formattedCategories = response.data.categories.map(category => ({
+        label: category.name,
+        value: category.id,
+      }));
+      setCategories(formattedCategories);
+    } catch (error) {
+      logger.error(error);
+    }
+  };
+
+  const fetchPostDetails = async () => {
+    try {
+      const {
+        data: { post, categories },
+      } = await postsApi.show(slug);
+      setPostDetail(post);
+      setCategoryDetails(
+        categories.map(category => ({
           label: category.name,
           value: category.id,
         }))
       );
     } catch (error) {
       logger.error(error);
-      setLoading(false);
+      history.push("/");
     }
   };
 
-  if (loading) <PageLoader />;
-
   useEffect(() => {
     fetchCategories();
+    fetchPostDetails();
   }, []);
+
+  if (loading) return <PageLoader />;
 
   return (
     <div className="pt-15 w-[90vw] overflow-y-scroll p-10">
       <Form
         formikProps={{
           initialValues: {
-            title: "",
-            description: "",
-            category_ids: [],
+            title: postDetail?.title || "",
+            description: postDetail?.description || "",
+            category_ids: categoryDetails || [],
           },
+          enableReinitialize: true,
+          onSubmit: handleSubmit,
         }}
       >
         {({ setFieldValue, values }) => (
           <div className="w-full">
             <div className="flex w-full justify-between p-4">
               <Typography style="h1" weight="extrabold">
-                New Blog Post
+                Edit blog post
               </Typography>
-              <PublishButton {...{ handleSubmit, values }} />
+              <div className="flex items-center justify-between space-x-3">
+                <PublishButton {...{ handleSubmit, values }} isDelete />
+                <Button label="Cancel" style="secondary" type="reset" />
+              </div>
             </div>
             <div className="h-[70vh] space-y-7 border-2 border-gray-500 p-3">
               <Input label="Title" name="title" placeholder="Enter Title" />
@@ -83,11 +108,9 @@ const Create = () => {
                 name="category_ids"
                 options={categories}
                 placeholder="Select categories"
+                value={values.category_ids}
                 onChange={selectedOptions => {
-                  setFieldValue(
-                    "category_ids",
-                    selectedOptions.map(option => option.value)
-                  );
+                  setFieldValue("category_ids", selectedOptions);
                 }}
               />
               <Textarea
@@ -105,4 +128,4 @@ const Create = () => {
   );
 };
 
-export default Create;
+export default Edit;

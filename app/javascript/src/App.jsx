@@ -10,6 +10,7 @@ import { getFromLocalStorage } from "utils/storage";
 import PrivateRoute from "./components/commons/PrivateRoute";
 import Home from "./components/Home";
 import Create from "./components/Post/Create";
+import Edit from "./components/Post/Edit";
 import Show from "./components/Post/Show";
 import Sidebar from "./components/Sidebar";
 
@@ -30,6 +31,7 @@ const App = () => {
             <Route exact component={Signup} path="/signup" />
             <Route exact component={Login} path="/login" />
             <Route exact component={Show} path="/post/:slug/show" />
+            <Route exact component={Edit} path="/post/:slug/edit" />
             <Route exact component={Create} path="/post/create" />
             <Route exact path="/about" render={() => <div>About Page</div>} />
             <PrivateRoute

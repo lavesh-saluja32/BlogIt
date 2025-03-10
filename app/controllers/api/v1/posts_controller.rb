@@ -1,33 +1,31 @@
 # frozen_string_literal: true
 
 class Api::V1::PostsController < ApplicationController
+  after_action :verify_authorized, except: :index
+  # after_action :verify_policy_scoped, only: :index
+  before_action :load_post!, only: %i[show update]
+
   def index
     current_user = @current_user
     current_user_organization = current_user.organization
 
     if params[:category_names].present?
       category_names = params[:category_names].split(",")
-      @posts = Post.includes(:categories)
+      @posts = Post.includes(:categories).published
         .where(organization_id: current_user_organization.id)
         .where(categories: { name: category_names })
         .distinct
     else
-      @posts = Post.includes(:categories)
+      @posts = Post.includes(:categories).published
         .where(organization_id: current_user_organization.id)
     end
     render
   end
 
   def show
-    post = Post.find_by(slug: params[:slug])
-    if post.nil?
-      puts "hello"
-      render status: :not_found, json: { error: "Post not found." }
-    elsif post.organization_id != current_user.organization_id
-      render status: :forbidden, json: { error: "You are not authorized to view this post." }
-    else
-      render status: :ok, json: { post:, categories: post.categories, user: post.user }
-    end
+    puts "hello"
+    authorize @post
+    render status: :ok, json: { post: @post, categories: @post.categories, user: @post.user }
   end
 
   def create
@@ -35,6 +33,7 @@ class Api::V1::PostsController < ApplicationController
     organization = user.organization
 
     post = Post.new(post_params)
+    authorize post
     post.user = user
     post.organization = organization
 
@@ -46,9 +45,20 @@ class Api::V1::PostsController < ApplicationController
     render_notice(t("successfully_created", entity: "Post"))
   end
 
+  def update
+    authorize @post
+    @post.update!(post_params)
+    render_notice(t("successfully_updated", entity: "Post"))
+  end
+
   private
 
+    def load_post!
+      @post = Post.find_by!(slug: params[:slug])
+    end
+
     def post_params
-      params.require(:post).permit(:title, :description, category_ids: [])
+      puts params
+      params.require(:post).permit(:title, :description, :publish, category_ids: [])
     end
 end
