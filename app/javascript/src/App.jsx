@@ -8,6 +8,7 @@ import { Login, Signup } from "components/Authentication";
 import { getFromLocalStorage } from "utils/storage";
 
 import PrivateRoute from "./components/commons/PrivateRoute";
+import Dashboard from "./components/Dashboard";
 import Home from "./components/Home";
 import Create from "./components/Post/Create";
 import Edit from "./components/Post/Edit";
@@ -28,6 +29,7 @@ const App = () => {
          p-10 pb-10 pt-20`}
         >
           <Switch>
+            <Route exact component={Dashboard} path="/posts" />
             <Route exact component={Signup} path="/signup" />
             <Route exact component={Login} path="/login" />
             <Route exact component={Show} path="/post/:slug/show" />

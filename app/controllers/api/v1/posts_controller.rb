@@ -3,7 +3,7 @@
 class Api::V1::PostsController < ApplicationController
   after_action :verify_authorized, except: :index
   # after_action :verify_policy_scoped, only: :index
-  before_action :load_post!, only: %i[show update]
+  before_action :load_post!, only: %i[show update destroy]
 
   def index
     current_user = @current_user
@@ -49,6 +49,12 @@ class Api::V1::PostsController < ApplicationController
     authorize @post
     @post.update!(post_params)
     render_notice(t("successfully_updated", entity: "Post"))
+  end
+
+  def destroy
+    authorize @post
+    @post.destroy!
+    render_notice(t("successfully_deleted", entity: "Task"))
   end
 
   private

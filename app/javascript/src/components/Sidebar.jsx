@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 
-import { List, MatrixDots, Draft, LeftArrow } from "@bigbinary/neeto-icons";
+import {
+  List,
+  MatrixDots,
+  Draft,
+  LeftArrow,
+  Dashboard,
+} from "@bigbinary/neeto-icons";
 import { Button } from "@bigbinary/neetoui";
 import { useHistory, useLocation } from "react-router-dom";
 
@@ -23,7 +29,7 @@ const Sidebar = () => {
   const userName = getFromLocalStorage("authUserName") || "Oliver Smith";
   const userEmail = getFromLocalStorage("authEmail") || "oliver@example.com";
 
-  const navigateToCreatePost = link => {
+  const navigateTo = link => {
     history.push(link);
   };
 
@@ -87,12 +93,17 @@ const Sidebar = () => {
         <Button
           icon={() => <List />}
           style="link"
-          onClick={() => navigateToCreatePost("/")}
+          onClick={() => navigateTo("/")}
         />
         <Button
           icon={() => <Draft />}
           style="link"
-          onClick={() => navigateToCreatePost("/post/create")}
+          onClick={() => navigateTo("/post/create")}
+        />
+        <Button
+          icon={() => <Dashboard />}
+          style="link"
+          onClick={() => navigateTo("/posts")}
         />
       </div>
       {/* Profile Section */}
