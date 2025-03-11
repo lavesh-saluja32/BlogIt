@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 
+import { Articles } from "@bigbinary/neeto-icons";
 import { Typography, Button, Select } from "@bigbinary/neetoui";
 import { Form, Input, Textarea } from "@bigbinary/neetoui/formik";
 import { useParams, useHistory } from "react-router-dom";
@@ -15,9 +16,19 @@ const Edit = () => {
   const [categories, setCategories] = useState([]);
   const [postDetail, setPostDetail] = useState({});
   const [categoryDetails, setCategoryDetails] = useState([]);
+  const [user, setUser] = useState({});
 
   const history = useHistory();
   const { slug } = useParams();
+
+  const handleDelete = async slug => {
+    try {
+      await postsApi.destroy(slug);
+      history.push("/");
+    } catch (error) {
+      logger.error(error);
+    }
+  };
 
   const handleSubmit = async (values, publishStatus) => {
     setLoading(true);
@@ -53,9 +64,10 @@ const Edit = () => {
   const fetchPostDetails = async () => {
     try {
       const {
-        data: { post, categories },
+        data: { post, categories, user },
       } = await postsApi.show(slug);
       setPostDetail(post);
+      setUser(user);
       setCategoryDetails(
         categories.map(category => ({
           label: category.name,
@@ -66,6 +78,17 @@ const Edit = () => {
       logger.error(error);
       history.push("/");
     }
+  };
+
+  const handlePreview = () => {
+    history.push({
+      pathname: `/post/${slug}/preview`,
+      state: {
+        post: postDetail,
+        categories: categoryDetails,
+        user,
+      },
+    });
   };
 
   useEffect(() => {
@@ -95,8 +118,17 @@ const Edit = () => {
                 Edit blog post
               </Typography>
               <div className="flex items-center justify-between space-x-3">
-                <PublishButton {...{ handleSubmit, values }} isDelete />
+                <PublishButton
+                  {...{ handleSubmit, values }}
+                  isDelete
+                  handleDelete={() => handleDelete(postDetail.slug)}
+                />
                 <Button label="Cancel" style="secondary" type="reset" />
+                <Button
+                  icon={() => <Articles />}
+                  style="link"
+                  onClick={handlePreview}
+                />
               </div>
             </div>
             <div className="h-[70vh] space-y-7 border-2 border-gray-500 p-3">

@@ -17,6 +17,7 @@ Rails.application.routes.draw do
         resources :users, only: %i[create]
         resources :organizations, only: %i[index]
         resource :session, only: [:create, :destroy]
+        get "user_posts", to: "posts#user_posts"
       end
     end
   end

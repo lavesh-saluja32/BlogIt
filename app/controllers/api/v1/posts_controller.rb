@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Api::V1::PostsController < ApplicationController
-  after_action :verify_authorized, except: :index
+  after_action :verify_authorized, except: [:index, :user_posts]
   # after_action :verify_policy_scoped, only: :index
   before_action :load_post!, only: %i[show update destroy]
 
@@ -20,6 +20,11 @@ class Api::V1::PostsController < ApplicationController
         .where(organization_id: current_user_organization.id)
     end
     render
+  end
+
+  def user_posts
+    puts "hello"
+    @posts = current_user.posts.includes(:categories)
   end
 
   def show
@@ -52,6 +57,7 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def destroy
+    puts "hello"
     authorize @post
     @post.destroy!
     render_notice(t("successfully_deleted", entity: "Task"))

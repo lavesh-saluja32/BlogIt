@@ -19,7 +19,7 @@ class PostPolicy
     user.id == post.user_id
   end
 
-  def destroy
+  def destroy?
     update?
   end
 end

@@ -12,6 +12,7 @@ import Dashboard from "./components/Dashboard";
 import Home from "./components/Home";
 import Create from "./components/Post/Create";
 import Edit from "./components/Post/Edit";
+import Preview from "./components/Post/Preview";
 import Show from "./components/Post/Show";
 import Sidebar from "./components/Sidebar";
 
@@ -29,6 +30,7 @@ const App = () => {
          p-10 pb-10 pt-20`}
         >
           <Switch>
+            <Route exact component={Preview} path="/post/:slug/preview" />
             <Route exact component={Dashboard} path="/posts" />
             <Route exact component={Signup} path="/signup" />
             <Route exact component={Login} path="/login" />

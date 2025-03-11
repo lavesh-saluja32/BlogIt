@@ -17,6 +17,8 @@ const update = ({ slug, payload }) =>
     post: payload,
   });
 
-const postsApi = { fetch, create, show, destroy, update };
+const user_posts = () => axios.get("api/v1/user_posts");
+
+const postsApi = { fetch, create, show, destroy, update, user_posts };
 
 export default postsApi;
