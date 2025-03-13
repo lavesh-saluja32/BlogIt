@@ -8,9 +8,9 @@ class Api::V1::PostsController < ApplicationController
   def index
     current_user = @current_user
     current_user_organization = current_user.organization
-
+    puts params[:category_names]
     if params[:category_names].present?
-      category_names = params[:category_names].split(",")
+      category_names = params[:category_names]
       @posts = Post.includes(:categories).published
         .where(organization_id: current_user_organization.id)
         .where(categories: { name: category_names })
@@ -24,7 +24,13 @@ class Api::V1::PostsController < ApplicationController
 
   def user_posts
     puts "hello"
-    @posts = current_user.posts.includes(:categories)
+    title = params[:title] if params[:title].present?
+    categories = params[:categories] if params[:categories].present?
+    status = params[:status] if params[:status].present?
+    puts "#{title} #{categories} #{status}"
+
+    posts = current_user.posts.includes(:categories)
+    @posts = Api::V1::UserPostFilterService.new(posts, params).process!
   end
 
   def show

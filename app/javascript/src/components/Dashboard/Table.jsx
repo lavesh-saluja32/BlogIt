@@ -2,9 +2,8 @@ import React, { useState } from "react";
 
 import { MenuHorizontal } from "@bigbinary/neeto-icons";
 import { Table as NeetoTable, Tooltip, Dropdown } from "@bigbinary/neetoui";
-// import { Divider, Radio, Table as NeetoTable } from "antd";
 
-const Table = ({ data, handleDelete, handlePublish }) => {
+const Table = ({ selectedColumns = [], data, handleDelete, handlePublish }) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const handleSelect = selectedRowKeys => {
     setSelectedRowKeys(selectedRowKeys);
@@ -26,25 +25,25 @@ const Table = ({ data, handleDelete, handlePublish }) => {
           </a>
         </Tooltip>
       ),
-      width: 250,
+      width: 100,
     },
     {
       dataIndex: "category",
       key: "category",
       title: "Category",
-      width: 200,
+      width: 100,
     },
     {
       dataIndex: "lastPublishedAt",
       key: "lastPublishedAt",
       title: "Last Published At",
-      width: 200,
+      width: 100,
     },
     {
       dataIndex: "status",
       key: "status",
       title: "Status",
-      width: 150,
+      width: 100,
     },
     {
       dataIndex: "action",
@@ -93,9 +92,11 @@ const Table = ({ data, handleDelete, handlePublish }) => {
   return (
     <div>
       <NeetoTable
+        enableColumnReorder
         rowSelection
-        columns={columns}
+        columns={columns.filter(({ key }) => selectedColumns[key])}
         dataSource={data}
+        enableColumnResize={false}
         selectedRowKeys={selectedRowKeys}
         onRowSelect={handleSelect}
       />

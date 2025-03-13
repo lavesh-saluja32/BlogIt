@@ -17,7 +17,8 @@ const update = ({ slug, payload }) =>
     post: payload,
   });
 
-const user_posts = () => axios.get("api/v1/user_posts");
+const user_posts = (queryParams = {}) =>
+  axios.get("api/v1/user_posts", { params: queryParams });
 
 const postsApi = { fetch, create, show, destroy, update, user_posts };
 

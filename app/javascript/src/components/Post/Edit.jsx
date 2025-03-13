@@ -80,12 +80,12 @@ const Edit = () => {
     }
   };
 
-  const handlePreview = () => {
+  const handlePreview = values => {
     history.push({
       pathname: `/post/${slug}/preview`,
       state: {
-        post: postDetail,
-        categories: categoryDetails,
+        post: { ...postDetail, ...values },
+        categories: values.category_ids,
         user,
       },
     });
@@ -127,7 +127,7 @@ const Edit = () => {
                 <Button
                   icon={() => <Articles />}
                   style="link"
-                  onClick={handlePreview}
+                  onClick={() => handlePreview(values)}
                 />
               </div>
             </div>
