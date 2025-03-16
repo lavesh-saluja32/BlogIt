@@ -23,12 +23,6 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def user_posts
-    puts "hello"
-    title = params[:title] if params[:title].present?
-    categories = params[:categories] if params[:categories].present?
-    status = params[:status] if params[:status].present?
-    puts "#{title} #{categories} #{status}"
-
     posts = current_user.posts.includes(:categories)
     @posts = Api::V1::UserPostFilterService.new(posts, params).process!
   end
@@ -62,11 +56,30 @@ class Api::V1::PostsController < ApplicationController
     render_notice(t("successfully_updated", entity: "Post"))
   end
 
+  def update_publish_bulk
+    params = update_bulk_params
+
+    @posts = Post.where(id: params[:ids])
+    authorize @posts
+    puts "#{params} ===="
+    puts @posts
+    @posts.update_all(publish: params[:publish], updated_at: DateTime.current)
+    render_notice(t("successfully_updated", entity: "Posts"))
+  end
+
   def destroy
-    puts "hello"
     authorize @post
     @post.destroy!
-    render_notice(t("successfully_deleted", entity: "Task"))
+    render_notice(t("successfully_deleted", entity: "Post"))
+  end
+
+  def destroy_bulk
+    params = destroy_bulk_params
+    puts "#{params} ==="
+    @posts = Post.where(id: params[:ids])
+    authorize @posts
+    @posts.destroy_all
+    render_notice(t("successfully_deleted", entity: "Posts"))
   end
 
   private
@@ -76,7 +89,14 @@ class Api::V1::PostsController < ApplicationController
     end
 
     def post_params
-      puts params
       params.require(:post).permit(:title, :description, :publish, category_ids: [])
+    end
+
+    def update_bulk_params
+      params.require(:posts).permit(:publish, ids: [])
+    end
+
+    def destroy_bulk_params
+      params.require(:posts).permit(ids: [])
     end
 end

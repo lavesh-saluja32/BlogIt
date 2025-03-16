@@ -20,6 +20,21 @@ const update = ({ slug, payload }) =>
 const user_posts = (queryParams = {}) =>
   axios.get("api/v1/user_posts", { params: queryParams });
 
-const postsApi = { fetch, create, show, destroy, update, user_posts };
+const update_publish_bulk = payload =>
+  axios.patch("api/v1/update_publish_bulk", { posts: payload });
+
+const destroy_bulk = payload =>
+  axios.delete("api/v1/destroy_bulk", { data: { posts: payload } });
+
+const postsApi = {
+  fetch,
+  create,
+  show,
+  destroy,
+  update,
+  user_posts,
+  update_publish_bulk,
+  destroy_bulk,
+};
 
 export default postsApi;

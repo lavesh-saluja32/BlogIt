@@ -1,12 +1,20 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { MenuHorizontal } from "@bigbinary/neeto-icons";
 import { Table as NeetoTable, Tooltip, Dropdown } from "@bigbinary/neetoui";
 
-const Table = ({ selectedColumns = [], data, handleDelete, handlePublish }) => {
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const handleSelect = selectedRowKeys => {
+const Table = ({
+  selectedColumns = [],
+  data,
+  handleDelete,
+  handlePublish,
+  setSelectedRows,
+  selectedRowKeys,
+  setSelectedRowKeys,
+}) => {
+  const handleSelect = (selectedRowKeys, selectedRows) => {
     setSelectedRowKeys(selectedRowKeys);
+    setSelectedRows(selectedRows);
   };
   const { Menu, MenuItem, Divider } = Dropdown;
   const { Button: MenuButton } = MenuItem;

@@ -18,6 +18,8 @@ Rails.application.routes.draw do
         resources :organizations, only: %i[index]
         resource :session, only: [:create, :destroy]
         get "user_posts", to: "posts#user_posts"
+        patch "update_publish_bulk", to: "posts#update_publish_bulk"
+        delete "destroy_bulk", to: "posts#destroy_bulk"
       end
     end
   end

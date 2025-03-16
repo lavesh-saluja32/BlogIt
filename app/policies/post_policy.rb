@@ -22,4 +22,12 @@ class PostPolicy
   def destroy?
     update?
   end
+
+  def update_publish_bulk?
+    post.all? { |post| post.user_id == user.id }
+  end
+
+  def destroy_bulk?
+    post.all? { |post| post.user_id == user.id }
+  end
 end

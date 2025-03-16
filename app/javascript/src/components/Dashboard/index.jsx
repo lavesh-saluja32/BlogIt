@@ -6,9 +6,11 @@ import {
   ActionDropdown,
   Checkbox,
   Button,
+  Dropdown,
 } from "@bigbinary/neetoui";
 import { useLocation } from "react-router-dom";
 
+import DeleteModal from "./DeleteModal";
 import FilterPanel from "./FilterPanel";
 import Table from "./Table";
 
@@ -19,7 +21,9 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState([]);
   const [isOpenFilterPanel, setIsOpenFilterPanel] = useState(false);
-
+  // const [filters, setFilters] = useState({});
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [selectedColumns, setSelectedColumns] = useState({
     title: true,
     category: true,
@@ -27,6 +31,7 @@ const Dashboard = () => {
     status: true,
     action: true,
   });
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const { Menu, MenuItem } = ActionDropdown;
 
   const location = useLocation();
@@ -46,6 +51,9 @@ const Dashboard = () => {
     try {
       const response = await postsApi.user_posts(params);
       formatResponseAndSavePost(response);
+      // setFilters({
+      //   params,
+      // });
     } catch (error) {
       logger.error(error);
     } finally {
@@ -56,6 +64,7 @@ const Dashboard = () => {
   const formatResponseAndSavePost = response => {
     const blogPosts = response.data.posts.map((post, index) => ({
       id: index + 1,
+      post_id: post.id,
       category: post.categories.map(category => category.name).join(", "),
       title: post?.title,
       lastPublishedAt: new Date(post.updated_at.split(" ")[0]).toDateString(),
@@ -71,6 +80,30 @@ const Dashboard = () => {
         publish: publishStatus,
       };
       await postsApi.update({ slug, payload });
+      fetchPosts();
+    } catch (error) {
+      logger.error(error);
+    }
+  };
+
+  const handleBulkPublish = async publishStatus => {
+    try {
+      await postsApi.update_publish_bulk({
+        ids: selectedRows.map(data => data.post_id),
+        publish: publishStatus,
+      });
+      fetchPosts();
+    } catch (error) {
+      logger.error(error);
+    }
+  };
+
+  const handleBulkDestroy = async () => {
+    try {
+      await postsApi.destroy_bulk({
+        ids: selectedRows.map(data => data.post_id),
+      });
+      setShowDeleteModal(false);
       fetchPosts();
     } catch (error) {
       logger.error(error);
@@ -106,9 +139,43 @@ const Dashboard = () => {
       </Typography>
       <div className="flex w-full items-center justify-between p-3">
         {posts.length > 0 && (
-          <Typography className="m-2" style="body1" weight="bold">
-            {`${posts.length} articles`}
-          </Typography>
+          <div>
+            {selectedRows.length > 0 ? (
+              <div className="flex space-x-4">
+                <Typography>
+                  <span className="font-bold">{`${selectedRows.length} articles`}</span>
+                  {` selected of ${posts.length}`}
+                </Typography>
+                <Dropdown buttonStyle="secondary" label="Change status">
+                  <Menu className="space-y-2">
+                    <MenuItem>
+                      <MenuItem.Button
+                        onClick={() => handleBulkPublish("unpublished")}
+                      >
+                        Draft
+                      </MenuItem.Button>
+                    </MenuItem>
+                    <MenuItem>
+                      <MenuItem.Button
+                        onClick={() => handleBulkPublish("published")}
+                      >
+                        Publish
+                      </MenuItem.Button>
+                    </MenuItem>
+                  </Menu>
+                </Dropdown>
+                <Button
+                  label="Delete all"
+                  style="danger"
+                  onClick={() => setShowDeleteModal(true)}
+                />
+              </div>
+            ) : (
+              <Typography className="m-2" style="body1" weight="bold">
+                {`${posts.length} articles`}
+              </Typography>
+            )}
+          </div>
         )}
         <div className="flex items-center">
           <ActionDropdown buttonStyle="secondary" label="Columns">
@@ -147,7 +214,12 @@ const Dashboard = () => {
         </div>
       </div>
       <Table
-        {...{ selectedColumns }}
+        {...{
+          selectedColumns,
+          setSelectedRows,
+          selectedRowKeys,
+          setSelectedRowKeys,
+        }}
         data={posts}
         handleDelete={handleDelete}
         handlePublish={handlePublish}
@@ -156,8 +228,10 @@ const Dashboard = () => {
         {...{
           isOpen: isOpenFilterPanel,
           setIsOpen: setIsOpenFilterPanel,
-          fetchPosts,
         }}
+      />
+      <DeleteModal
+        {...{ showDeleteModal, setShowDeleteModal, handleBulkDestroy }}
       />
     </div>
   );
