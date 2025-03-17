@@ -11,7 +11,7 @@ class Api::V1::PostsController < ApplicationController
     puts params[:category_names]
     if params[:category_names].present?
       category_names = params[:category_names]
-      @posts = Post.includes(:categories).published
+      @posts = Post.includes(:categories, :votes).published
         .where(organization_id: current_user_organization.id)
         .where(categories: { name: category_names })
         .distinct
@@ -19,6 +19,7 @@ class Api::V1::PostsController < ApplicationController
       @posts = Post.includes(:categories).published
         .where(organization_id: current_user_organization.id)
     end
+    @user_votes = Vote.where(user_id: current_user.id, post_id: @posts.pluck(:id)).index_by(&:post_id)
     render
   end
 

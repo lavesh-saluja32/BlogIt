@@ -35,6 +35,7 @@ class Post < ApplicationRecord
 
   enum :publish, { unpublished: "unpublished", published: "published" }, default: :unpublished
   has_and_belongs_to_many :categories
+  has_many :votes
   belongs_to :user
   belongs_to :organization
 
@@ -46,6 +47,14 @@ class Post < ApplicationRecord
   validate :slug_not_changed
 
   before_create :set_slug
+
+  def new_votes
+    votes.sum(:value)
+  end
+
+  def update_bloggable_status
+    update(is_bloggable: new_votes >= Constants::BLOGGABLE_THRESHOLD)
+  end
 
   private
 

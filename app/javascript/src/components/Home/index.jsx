@@ -5,6 +5,7 @@ import { useLocation, useHistory } from "react-router-dom";
 
 import postsApi from "apis/posts";
 
+import votesApi from "../../apis/votes";
 import PageLoader from "../commons/PageLoader";
 import PostCard from "../PostCard";
 
@@ -43,6 +44,15 @@ const Home = () => {
     }
   };
 
+  const vote = async (post_slug, value) => {
+    try {
+      await votesApi.create({ post_slug, payload: { value } });
+      fetchPosts();
+    } catch (error) {
+      logger.error(error);
+    }
+  };
+
   useEffect(() => {
     fetchPosts();
   }, [location.search]); // Refetch posts when query params change
@@ -72,8 +82,8 @@ const Home = () => {
         {posts.length > 0 ? (
           posts.map(post => (
             <PostCard
-              key={post.title}
-              {...post}
+              key={post.slug}
+              {...{ ...post, vote }}
               showPost={() => navigateShowPost(post.slug)}
             />
           ))

@@ -11,4 +11,7 @@ json.posts @posts do |post|
   json.categories post.categories do |category|
     json.extract! category, :id, :name
   end
+
+  json.net_votes post.new_votes
+  json.current_user_vote @user_votes[post.id]&.value || 0
 end
