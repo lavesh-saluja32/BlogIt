@@ -1,0 +1,80 @@
+<div class="post-container">
+  <h1 class="post-title"><%= @post.title %></h1>
+
+  <div class="post-meta">
+    <span class="post-author"><strong>Author:</strong> <%= @post.user.name %></span>
+    <span class="post-date"><strong>Created At:</strong> <%= @post.created_at.strftime("%B %d, %Y") %></span>
+    <span class="post-status"><strong>Status:</strong> <%= @post.publish.capitalize %></span>
+  </div>
+
+  <div class="post-description">
+    <p><%= @post.description %></p>
+  </div>
+
+  <div class="post-votes">
+    <span class="upvotes">👍 <%= @post.upvotes %></span>
+    <span class="downvotes">👎 <%= @post.downvotes %></span>
+  </div>
+
+  <div class="organization">
+    <strong>Organization:</strong> <%= @post.organization_id %>
+  </div>
+</div>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    padding: 0;
+  }
+
+  .post-container {
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+  }
+
+  .post-title {
+    font-size: 24px;
+    color: #333;
+    text-align: center;
+  }
+
+  .post-meta {
+    margin-bottom: 15px;
+    font-size: 14px;
+    color: #666;
+  }
+
+  .post-meta span {
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  .post-description {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  .post-votes {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 16px;
+  }
+
+  .post-votes .upvotes {
+    color: green;
+    margin-right: 10px;
+  }
+
+  .post-votes .downvotes {
+    color: red;
+  }
+
+  .organization {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #555;
+  }
+</style>

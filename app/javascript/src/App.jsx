@@ -11,6 +11,7 @@ import PrivateRoute from "./components/commons/PrivateRoute";
 import Dashboard from "./components/Dashboard";
 import Home from "./components/Home";
 import Create from "./components/Post/Create";
+import DownloadPostReport from "./components/Post/DownloadPost";
 import Edit from "./components/Post/Edit";
 import Preview from "./components/Post/Preview";
 import Show from "./components/Post/Show";
@@ -30,6 +31,11 @@ const App = () => {
          p-10 pb-10 pt-20`}
         >
           <Switch>
+            <Route
+              exact
+              component={DownloadPostReport}
+              path="/post/:slug/report"
+            />
             <Route exact component={Preview} path="/post/:slug/preview" />
             <Route exact component={Dashboard} path="/posts" />
             <Route exact component={Signup} path="/signup" />

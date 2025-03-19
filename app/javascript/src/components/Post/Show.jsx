@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import { Edit } from "@bigbinary/neeto-icons";
+import { Edit, Download } from "@bigbinary/neeto-icons";
 import { Button, Typography } from "@bigbinary/neetoui";
 import { useParams, useHistory } from "react-router-dom";
 
@@ -35,6 +35,10 @@ const Show = () => {
     history.push(`/post/${slug}/edit`);
   };
 
+  const handlePdfNavigate = () => {
+    history.push(`/post/${slug}/report`);
+  };
+
   useEffect(() => {
     fetchPostDetails();
   }, []);
@@ -67,11 +71,18 @@ const Show = () => {
             <Typography className="text-sm" style="nano" weight="semibold">
               {user.name}
             </Typography>
-            <Button
-              icon={() => <Edit />}
-              style="link"
-              onClick={handleEditNavigate}
-            />
+            <div>
+              <Button
+                icon={() => <Edit />}
+                style="link"
+                onClick={handleEditNavigate}
+              />
+              <Button
+                icon={() => <Download />}
+                style="link"
+                onClick={handlePdfNavigate}
+              />
+            </div>
           </div>
           <Typography
             className="text-sm text-gray-600"

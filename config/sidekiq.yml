@@ -1,0 +1,8 @@
+development:
+  :concurrency: 1
+production:
+  :concurrency: 1
+:queues:
+  - default
+:redis:
+  url: redis://127.0.0.1:6379/12

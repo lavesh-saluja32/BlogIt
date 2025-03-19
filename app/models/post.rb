@@ -36,6 +36,7 @@ class Post < ApplicationRecord
   enum :publish, { unpublished: "unpublished", published: "published" }, default: :unpublished
   has_and_belongs_to_many :categories
   has_many :votes
+  has_one_attached :report
   belongs_to :user
   belongs_to :organization
 

@@ -82,3 +82,9 @@ group :development, :test do
   # For auto-generating demo data
   gem "faker"
 end
+
+gem "sidekiq", "~> 6.5.12"
+# PDF generation gem
+gem "wicked_pdf"
+# wicked_pdf uses the following binary
+gem "wkhtmltopdf-binary"
