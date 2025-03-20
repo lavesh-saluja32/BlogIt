@@ -11,7 +11,7 @@ import ProgressBar from "../commons/ProgressBar";
 
 const DownloadPostReport = () => {
   const [loading, setLoading] = useState(false);
-  const [generatePdfLoading, setGeneratePdfLoading] = useState(true);
+  // const [generatePdfLoading, setGeneratePdfLoading] = useState(true);
   const [message, setMessage] = useState("");
   const [progress, setProgress] = useState(0);
   const consumer = createConsumer();
@@ -20,9 +20,9 @@ const DownloadPostReport = () => {
 
   const generatePdf = async () => {
     setMessage("Generating report...");
-    setTimeout(() => {
-      setGeneratePdfLoading(false);
-    }, 5000);
+    // setTimeout(() => {
+    //   setGeneratePdfLoading(false);
+    // }, 5000);
 
     try {
       await postsApi.generatePdf(slug);
@@ -82,7 +82,7 @@ const DownloadPostReport = () => {
       <div className="mt-4 space-x-2">
         <Button
           className="rounded-lg bg-green-600 px-4 py-2 text-white hover:bg-green-700"
-          disabled={generatePdfLoading}
+          // disabled={generatePdfLoading}
           onClick={downloadPdf}
         >
           Download PDF
