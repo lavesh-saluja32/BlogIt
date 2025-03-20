@@ -28,6 +28,7 @@
 #       enabled: "ON"
 
 en:
+  generic_error: "Something went wrong. Please try again later."
   report:
     render: "Rendering the report"
     generate: "Generating the PDF report"
