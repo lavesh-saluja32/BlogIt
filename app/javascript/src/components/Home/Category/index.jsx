@@ -16,7 +16,7 @@ const CategorySidebar = ({
 
   return (
     <div
-      className={`fixed top-0 h-screen w-[20vw] overflow-y-scroll bg-gray-400 p-10 transition-all duration-300 ease-in-out ${
+      className={`fixed top-0 z-50 h-screen w-[20vw] overflow-y-scroll bg-gray-400 p-10 transition-all duration-300 ease-in-out ${
         sidebarIsOpen ? "left-[5vw]" : "left-[-100%]"
       }`}
     >
