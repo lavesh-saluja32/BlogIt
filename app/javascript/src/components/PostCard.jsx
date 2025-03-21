@@ -18,7 +18,7 @@ const PostCard = ({
 }) => (
   <div className="flex justify-between">
     <div
-      className="m-5 cursor-pointer rounded-md border-b border-t-gray-300 bg-white p-4 pb-2"
+      className="m-5 w-full cursor-pointer rounded-md border-b border-t-gray-300 bg-white p-4 pb-2"
       onClick={showPost}
     >
       <Typography className="mb-2" style="h2">
