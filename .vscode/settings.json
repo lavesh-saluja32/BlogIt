@@ -9,5 +9,12 @@
   "files.trimFinalNewlines": true,
   "editor.formatOnSave": true,
   "yaml.format.enable": true,
-  "cSpell.words": ["bloggable", "downvotes", "shakapacker", "upvotes"]
+  "cSpell.words": [
+    "bigbinary",
+    "bloggable",
+    "downvotes",
+    "neetoui",
+    "shakapacker",
+    "upvotes"
+  ]
 }
