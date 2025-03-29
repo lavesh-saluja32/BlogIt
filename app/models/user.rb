@@ -24,7 +24,7 @@
 #
 class User < ApplicationRecord
   PASSWORD_REQUIREMENTS = /\A
-     (?=.{8,})           # At least 8 characters long
+     (?=.{6,})           # At least 8 characters long
    /x
   MAX_NAME_LENGTH = 35
   MAX_EMAIL_LENGTH = 255

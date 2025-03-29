@@ -28,6 +28,7 @@
 #       enabled: "ON"
 
 en:
+  password: "Password must be atleast of length 8"
   generic_error: "Something went wrong. Please try again later."
   report:
     render: "Rendering the report"
