@@ -8,7 +8,11 @@ const PublishButton = ({ isDelete, handleSubmit, values, handleDelete }) => {
 
   return (
     <div className="z-10">
-      <ActionDropdown buttonStyle="secondary" label="Publish">
+      <ActionDropdown
+        buttonStyle="secondary"
+        label="Publish"
+        onClick={() => handleSubmit(values, "published")}
+      >
         <Menu>
           <Button
             type="submit"
